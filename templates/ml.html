@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    QuickLearner
+{% endblock %}
+
+{% block main %}
+<video class="bg-video" playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop"><source src="static/video/bg.mp4" type="video/mp4" /></video>
+<div class="masthead">
+    <div class="masthead-content text-white">
+        <div class="container-fluid px-4 px-lg-0 d-flex align-items-center" style="height: 100vh;">
+            <div>
+                <h1 class="fst-italic lh-1 mb-4">This Feature is coming soon!</h1>
+                <p class="mb-5">We're working hard to finish the development of this programm. Sign up below to receive updates and to be notified when we launch!</p>
+                <form action="/ml" method="post" class="text-center">
+                    <div class="row input-group-newsletter">
+                        <div class="col">
+                            <input class="form-control {% if missing %}is-invalid{% endif %}" id="email" name="email" type="email" placeholder="Enter email address..." aria-label="Enter email address...">
+                        </div>
+                            <div class="col-auto"><button class="btn btn-primary" id="submitButton" type="submit">Notify Me!</button></div>
+                    </div>
+                    {% if missing %}
+                    <div class="text-center mb-3 mt-2">
+                        <h5>An email is required.</h5>
+                    </div>
+                    {% endif %}
+                    {% if alreadyindb %}
+                    <div class="text-center mb-3 mt-2">
+                        <h5>Email is already subscribed.</h5>
+                    </div>
+                    {% endif %}
+                    {% if success %}
+                    <div class="text-center mb-3 mt-2">
+                            <div class="fw-bolder">Form submission successful!</div>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

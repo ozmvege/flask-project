@@ -1,0 +1,40 @@
+{% extends "logreglayout.html" %}
+{% block title %}
+    Welcome Back!
+{% endblock %}
+
+{% block main %}
+<div class="text-center">
+    <h1 class="h4 text-gray-900 mb-5">Welcome Back!</h1>
+</div>
+<form action="/login" method="post" class="text-center">
+    <div class="form-group">
+        <input autocomplete="off" autofocus class="form-control form-control-user" id="username" name="username" placeholder="Username" type="text">
+    </div>
+    <div class="form-group">
+        <input class="form-control form-control-user" id="password" name="password" placeholder="Password" type="password">
+    </div>
+    {% if cred %}
+    <div class="d-flex align-items-center">
+        <i class="fa-solid fa-circle-exclamation fa-lg" style="color: #ff0000;" title="Username or Password doesn't exist!" data-bs-toggle="tooltip"></i>
+        <p class="mb-0 ms-2">Username or Password doesn't exist!</p>
+    </div>
+    {% endif %}
+    <div class="form-group">
+        <div class="custom-control custom-checkbox small">
+            <input class="form-check-input" type="checkbox" id="stay-logged-in" name="stay_logged_in">
+            <label class="form-check-label" for="stay-logged-in">Stay Logged In</label>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Log In</button>
+    <hr>
+    <div class="text-center">
+        <a class="small" href="/forgot-password">Forgot Password?</a>
+    </div>
+    <div class="text-center">
+        <a class="small" href="/register">Create an Account!</a>
+    </div>
+</form>
+
+{% endblock %}
+

@@ -1,0 +1,94 @@
+
+
+/* Add padding between form groups */
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"],
+.btn-primary {
+    width: 100%;
+    height: 40px;
+    border-radius: 50px; /* Increase the value to make the corners rounder */
+}
+
+.btn-primary {
+    height: 40px; /* Adjust the height as needed */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Adjust the value as needed */
+}
+
+
+
+
+
+#lightSwitch {
+    transform: scale(1.5);
+    margin-right: 20px;
+  }
+
+/* CSS for custom theme with darkslategray background and teal card body */
+.bg-light {
+    background-color: darkslategray !important;
+    border-radius: 3px;
+    color: gainsboro;
+}
+
+.cg-dark {
+    background-color: #424242 !important;
+    color: white;
+    border-radius: 50px; /* Increase the value to make the corners rounder */
+}
+
+.cg-dark a.small {
+    color: white;
+}
+
+/* Light Theme */
+.cg-light {
+    background-color: white !important;
+    color: black;
+    border-radius: 50px;
+}
+
+.cg-light a.small {
+    color: black;
+}
+
+  .custom-theme.bg-dark {
+    background-color: blanchedalmond !important;
+    box-shadow: 10px 5px 5px rgba(246, 255, 219, 0.5);
+    color: dimgray;
+    text-decoration: overline;
+  }
+
+/* Custom CSS for the tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #ff0000;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+#block1 {
+    margin-top: 20px;
+}
