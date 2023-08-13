@@ -2,7 +2,8 @@ import os
 import openai
 from openai.error import RateLimitError
 import json
-from cs50 import SQL
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -24,7 +25,16 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-db = SQL("sqlite:///users.db")
+# Configure database
+db_engine = create_engine("sqlite:///users.db")
+db_session = scoped_session(sessionmaker(bind=db_engine))
+
+# Define User class for ORM
+class User(db_session.Model):
+    __tablename__ = "users"
+    id = db_session.Column(db_session.Integer, primary_key=True)
+    username = db_session.Column(db_session.String, nullable=False)
+    hash = db_session.Column(db_session.String, nullable=False)
 
 
 @app.after_request
