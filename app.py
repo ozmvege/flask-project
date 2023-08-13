@@ -224,5 +224,5 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
-if _name_ == "_main_":
-    app.run(host="0.0.0.0", port=int("5000"), debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int("80"), debug=True)
