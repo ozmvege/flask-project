@@ -2,8 +2,9 @@ import os
 import openai
 from openai.error import RateLimitError
 import json
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -27,14 +28,17 @@ Session(app)
 
 # Configure database
 db_engine = create_engine("sqlite:///users.db")
-db_session = scoped_session(sessionmaker(bind=db_engine))
+DBSession = sessionmaker(bind=db_engine)
+db_session = DBSession()
+
+Base = declarative_base()
 
 # Define User class for ORM
-class User(db_session.Model):
+class User(Base):
     __tablename__ = "users"
-    id = db_session.Column(db_session.Integer, primary_key=True)
-    username = db_session.Column(db_session.String, nullable=False)
-    hash = db_session.Column(db_session.String, nullable=False)
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)
+    hash = Column(String, nullable=False)
 
 
 @app.after_request
