@@ -1,17 +1,23 @@
-Project Name: Host Flask Webapp on with SSL and dns
+# Host Flask Webapp on OCI with SSL and dns
 
-1. Get Domain
+# Get Domain
 In my example i got the domain from ionos
 
-2. Set up Webserver
-2.1 Create Instance.
+
+# Set up Webserver
+Create Instance.
 Create a new Oracle Cloud Infrastructure (OCI) instance with the specifications you mentioned (A1.Flex, 1 OCPU, 6GB Memory, Ubuntu).
 Set up a new Virtual Cloud Network (VCN).
 Generate SSH Keys
 
-2.2 Setup Webserver
 
-Add rule in Security List to allow ingress Rule port 5000
+# Set up Domain
+Point Domain to Instance Public IP Adress
+
+
+# Allow incoming HTTP and HTTPS traffic in OCI Security List
+Add rule in Security List to allow ingress Rule port 5000, 443 and 80
+
 
 # Allow incoming HTTP and HTTPS traffic
 sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 5000 -j ACCEPT
@@ -107,6 +113,8 @@ sudo service nginx restart
 
 # Start gunicorn 
 sudo /home/ubuntu/envs/flask01/bin/gunicorn -w 1 -b 0.0.0.0:5000 app:app
+
+If everything is working fine Ctrl+C and go to next step
 
 # Make automatically start up on boot
 sudo nano /etc/systemd/system/flask-app.service
