@@ -55,14 +55,12 @@ def get_api_key():
 
 
 @app.route("/")
-@login_required
 def main():
     user_id = session["user_id"]
     return render_template("index.html")
 
 
 @app.route("/ml", methods=["GET", "POST"])
-@login_required
 def ml():
     if request.method == "POST":
         email = request.form.get("email")
