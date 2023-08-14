@@ -1,38 +1,138 @@
-# Flask Webapp
-#### Description:
+Project Name: Host Flask Webapp on with SSL and dns
+
+1. Get Domain
+In my example i got the domain from ionos
+
+2. Set up Webserver
+2.1 Create Instance.
+Create a new Oracle Cloud Infrastructure (OCI) instance with the specifications you mentioned (A1.Flex, 1 OCPU, 6GB Memory, Oracle Linux 8.0).
+Set up a new Virtual Cloud Network (VCN).
+Generate SSH Keys
+
+2.2 Setup Webserver
+
+Add rule in Security List to allow ingress Rule port 5000
+
+# Allow incoming HTTP and HTTPS traffic
+sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 5000 -j ACCEPT
+sudo iptables -I INPUT 7 -m state --state NEW -p tcp --dport 443 -j ACCEPT
+sudo iptables -I INPUT 8 -m state --state NEW -p tcp --dport 80 -j ACCEPT
+sudo netfilter-persistent save
+
+# Update the package list and install Python 3 and pip
+sudo apt update
+sudo apt install -y python3-pip
+
+# Install virtualenv and virtualenvwrapper
+pip3 install virtualenv virtualenvwrapper
+
+# Configure virtualenvwrapper in .bashrc
+echo 'export WORKON_HOME=~/envs' >> ~/.bashrc
+echo 'export PATH=$PATH:/home/ubuntu/.local/bin' >> ~/.bashrc
+echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3' >> ~/.bashrc
+echo 'export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=" -p /usr/bin/python3 "' >> ~/.bashrc
+echo 'source /home/ubuntu/.local/bin/virtualenvwrapper.sh' >> ~/.bashrc
+source ~/.bashrc
+
+# Create a new virtual environment
+mkvirtualenv flask01
+
+# Install Flask
+pip3 install Flask
+
+# Clone your Flask project repository
+git clone <your project>
+
+cd flask-project
+
+# Activate the virtual environment
+workon flask01
+
+# Set up the environment variable for your Flask app
+export FLASK_APP=app.py
+
+# Run the Flask app with Gunicorn (install Gunicorn if not already installed)
+pip3 install gunicorn
+
+# Replace paths with your SSL certificate and private key paths
+sudo /home/ubuntu/envs/flask01/bin/gunicorn -w 4 -b 0.0.0.0:5000 app:app
+
+# If everything is working fine, Ctrl + C and install Nginx.
+
+# Install Nginx
+sudo apt-get update
+sudo apt-get install nginx
+
+# Create an Nginx server block configuration file
+sudo nano /etc/nginx/sites-available/my_flask_app
+
+# Add the following configuration (replace with your details):
+# Replace "your_domain.com" with your actual domain or IP
+# Replace "/path/to/your/app" with the actual path to your Flask app
+server {
+    listen 80;
+    server_name your_domain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name your_domain.com;
+
+    ssl_certificate /path/to/your/cert.pem;  # Path to your SSL certificate
+    ssl_certificate_key /path/to/your/key.pem;  # Path to your SSL private key
+    # U might need to convert the files to .pem with openssl
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;  # Gunicorn bind address
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Additional proxy settings if needed
+	# Cert: openssl x509 -in your_existing_certificate.crt -outform PEM -out your_domain.pem
+	# Key:  openssl rsa -in your_existing_private_key.key -outform PEM -out your_domain.key
+    }
+}
+
+# Enable the server block
+sudo ln -s /etc/nginx/sites-available/my_flask_app /etc/nginx/sites-enabled
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Restart Nginx
+sudo service nginx restart
 
 
-ai.html
-Now ai.html is chatbot that is powered by openai's api.
-Also the api key is expired.
-So it cant be used till a valid api key gets entered in /static/key.txt and /static/chat.js
-There isnt much more to it, i tried to make it fancy with css and bootstrap features
-The messages dont get saved in the db.
+# Start gunicorn 
+sudo /home/ubuntu/envs/flask01/bin/gunicorn -w 1 -b 0.0.0.0:5000 app:app
 
-ml.html
-Here i wanted to implement a notify page and it has all functionality.
-It recognizes when no mail is entered oder the mail is already in the db for ml_notify
-In the background a video is playing and yeah its just a classic notify page.
+# Make automatically start up on boot
+sudo nano /etc/systemd/system/flask-app.service
 
-Chatbot (ai.html):
-The chatbot implemented in the webapp is powered by OpenAI's API. It serves as an interactive interface where users can have conversations with the chatbot. However, currently, the chatbot functionality is disabled due to an expired API key. To enable the chatbot, a valid API key needs to be entered into the "/static/key.txt" and "/static/chat.js" files. The chatbot's frontend is designed with CSS and features from Bootstrap, giving it a visually appealing and user-friendly interface. It's worth noting that the chatbot messages are not stored in the database, and the conversations are not persisted beyond the session.
+[Unit]
+Description=Gunicorn instance to serve Flask application
+After=network.target
 
-ML Notify Tool (ml.html):
-The ML (Machine Learning) Notify tool is fully functional and provides a convenient way to send notifications to users via email. When using the ML Notify tool, users are required to enter an email address to receive the notifications. The system intelligently checks whether an email is missing or if the provided email address is already present in the database for the "ml_notify" table. This helps avoid redundant notifications to the same user.
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/flask-project
+Environment="PATH=/home/ubuntu/envs/flask01/bin"
+ExecStart=/home/ubuntu/envs/flask01/bin/gunicorn --workers 4 --bind 0.0.0.0:5000 app:app
 
-The ML Notify tool utilizes a video playing in the background to enhance the user experience while using the page. The video creates an engaging and dynamic backdrop for the notification feature, making the webapp more appealing to users.
+[Install]
+WantedBy=multi-user.target
 
-Database Structure:
-The webapp relies on a relational database to store user information and other relevant data. The database schema consists of two main tables: "users" and "user_details." The "users" table holds essential user account information, such as the username and password. The "user_details" table contains additional user data, such as first name, last name, etc., and is connected to the "users" table via a foreign key relationship. This approach ensures a well-organized and efficient data management system for user information.
+# Save
 
-Password Security:
-During the registration process, the webapp takes password security seriously by enforcing certain criteria for password creation. The password must meet predefined criteria, which can be adjusted as needed to adapt to changing security requirements. The criteria may include parameters such as minimum length, special characters, uppercase letters, and numbers. By setting these criteria, the webapp enhances the security of user accounts and protects against weak passwords.
+sudo systemctl daemon-reload
 
-Forgot Password Functionality:
-While the webapp features a sophisticated login and registration system, it also plans to include a "Forgot Password" functionality. Unfortunately, this functionality is not yet implemented, but it remains a future enhancement to improve user experience and account recovery.
+sudo systemctl enable flask-app
+sudo systemctl start flask-app
 
-Navigation and User Interface:
-The webapp boasts a modern and intuitive design with a dark mode switch, providing users with a personalized and visually appealing experience. The navigation bar includes essential elements such as links to GitHub and Twitter profiles, a logout button, a home button, and navigation buttons for easy access to different sections of the webapp.
+sudo systemctl status flask-app
 
-Conclusion:
-The Flask webapp is a well-rounded project that showcases various functionalities, including a sophisticated login and registration system, an interactive chatbot powered by OpenAI's API (pending API key update), and a fully functional ML Notify tool for email notifications. The elegant design and user-friendly interface contribute to a positive user experience while interacting with the webapp's different features. With future improvements, such as implementing the "Forgot Password" functionality, the webapp is poised to become even more robust and user-centric.
+Now, Gunicorn will start automatically on machine startup using the systemd service. You can also manage the service with commands like stop, restart, and status using systemctl.
+
