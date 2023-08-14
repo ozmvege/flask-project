@@ -28,10 +28,15 @@ pip3 install virtualenv virtualenvwrapper
 
 # Configure virtualenvwrapper in .bashrc
 echo 'export WORKON_HOME=~/envs' >> ~/.bashrc
+
 echo 'export PATH=$PATH:/home/ubuntu/.local/bin' >> ~/.bashrc
+
 echo 'export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3' >> ~/.bashrc
+
 echo 'export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=" -p /usr/bin/python3 "' >> ~/.bashrc
+
 echo 'source /home/ubuntu/.local/bin/virtualenvwrapper.sh' >> ~/.bashrc
+
 source ~/.bashrc
 
 # Create a new virtual environment
