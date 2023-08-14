@@ -5,7 +5,7 @@ In my example i got the domain from ionos
 
 2. Set up Webserver
 2.1 Create Instance.
-Create a new Oracle Cloud Infrastructure (OCI) instance with the specifications you mentioned (A1.Flex, 1 OCPU, 6GB Memory, Oracle Linux 8.0).
+Create a new Oracle Cloud Infrastructure (OCI) instance with the specifications you mentioned (A1.Flex, 1 OCPU, 6GB Memory, Ubuntu).
 Set up a new Virtual Cloud Network (VCN).
 Generate SSH Keys
 
