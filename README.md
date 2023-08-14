@@ -76,6 +76,7 @@ sudo nano /etc/nginx/sites-available/my_flask_app
 # Replace "/path/to/your/app" with the actual path to your Flask app
 
 # Redirect HTTP to HTTPS
+
 server {
     listen 80;
     server_name your_domain.com;
