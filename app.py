@@ -20,7 +20,7 @@ from helper import password_check
 app = Flask(__name__)
 
 # Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
