@@ -84,17 +84,14 @@ server {
 server {
     listen 443 ssl;
     server_name your_domain.com;
-
     ssl_certificate /path/to/your/cert.pem;  # Path to your SSL certificate
     ssl_certificate_key /path/to/your/key.pem;  # Path to your SSL private key
     # U might need to convert the files to .pem with openssl
-
     location / {
         proxy_pass http://127.0.0.1:8000;  # Gunicorn bind address
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
         # Additional proxy settings if needed
 	# Cert: openssl x509 -in your_existing_certificate.crt -outform PEM -out your_domain.pem
 	# Key:  openssl rsa -in your_existing_private_key.key -outform PEM -out your_domain.key
