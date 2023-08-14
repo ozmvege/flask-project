@@ -56,7 +56,6 @@ def get_api_key():
 
 @app.route("/")
 def main():
-    user_id = session["user_id"]
     return render_template("index.html")
 
 
