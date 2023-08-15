@@ -1,0 +1,5 @@
+pytz
+openai
+cs50
+flask-session
+Flask
